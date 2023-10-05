@@ -2,7 +2,6 @@ package br.com.mdr.animeapp.data.local.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -20,6 +19,6 @@ interface HeroDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHeroes(heroes: List<Hero>)
 
-    @Delete
-    suspend fun deleteAll()
+    @Query("DELETE FROM hero_table")
+    suspend fun deleteAllHeroes()
 }

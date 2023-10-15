@@ -18,7 +18,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     //Provides a singleton database instance
-    fun provideDatabase(@ApplicationContext context: Context) =
+    fun provideDatabase(@ApplicationContext context: Context): HeroDatabase =
         Room.databaseBuilder(
             context = context,
             klass = HeroDatabase::class.java,

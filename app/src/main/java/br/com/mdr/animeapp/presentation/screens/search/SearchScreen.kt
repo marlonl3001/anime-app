@@ -35,9 +35,8 @@ fun SearchScreen(
                     navController.popBackStack()
                 }
             )
-        }
-    ) { innerPadding ->
-        Column {
+        },
+        content = { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding),
@@ -46,5 +45,5 @@ fun SearchScreen(
                 ListContent(heroes = heroes, navController = navController)
             }
         }
-    }
+    )
 }

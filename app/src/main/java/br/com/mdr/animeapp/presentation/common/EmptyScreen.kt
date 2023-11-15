@@ -36,23 +36,29 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 @Composable
-fun EmptyScreen(error: LoadState.Error) {
-    val message by remember {
-        mutableStateOf(getErrorMessage(error))
+fun EmptyScreen(error: LoadState.Error? = null) {
+    var message by remember {
+        mutableStateOf("Find your Favorite Hero!")
     }
-    val icon by remember {
-        mutableIntStateOf(R.drawable.ic_network_error)
+    var icon by remember {
+        mutableIntStateOf(R.drawable.ic_search_document)
     }
 
     var startAnimation by remember {
         mutableStateOf(false)
     }
+
     val alphaAnim by animateFloatAsState(
         targetValue = if (startAnimation) ContentAlpha.disabled else 0f,
         animationSpec = tween(
             durationMillis = 1000
         ), label = "alphaAnim"
     )
+
+    if (error != null) {
+       message = getErrorMessage(error)
+       icon = R.drawable.ic_network_error
+    }
 
     LaunchedEffect(key1 = true) {
         startAnimation = true
@@ -94,6 +100,7 @@ private fun getErrorMessage(errorState: LoadState.Error): String {
     return when (errorState.error) {
         is SocketTimeoutException -> "Server Unavailable."
         is ConnectException -> "Internet Unavailable."
+        is NullPointerException -> "No Hero found!"
         else -> "Unknown error."
     }
 }

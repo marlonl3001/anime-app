@@ -16,4 +16,5 @@
     <string name="abilities">Abilities</string>
     <string name="nature_types">Nature Types</string>
     <string name="finish_button">Finish</string>
+    <string name="search_here">Search here...</string>
 </resources>

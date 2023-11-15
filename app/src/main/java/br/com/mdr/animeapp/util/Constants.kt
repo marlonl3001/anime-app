@@ -11,4 +11,5 @@ object Constants {
     const val ON_BOARDING_PREF_KEY = "onboarding_key"
 
     const val LAST_ONBOARDING_PAGE = 2
+    const val DEFAULT_PAGE_SIZE = 5
 }

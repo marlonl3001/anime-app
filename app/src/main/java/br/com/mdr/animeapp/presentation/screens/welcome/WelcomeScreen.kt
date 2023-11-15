@@ -39,6 +39,7 @@ import br.com.mdr.animeapp.R
 import br.com.mdr.animeapp.domain.model.OnBoardingPage
 import br.com.mdr.animeapp.navigation.Screen
 import br.com.mdr.animeapp.ui.theme.EXTRA_LARGE_PADDING
+import br.com.mdr.animeapp.ui.theme.MEDIUM_PADDING
 import br.com.mdr.animeapp.ui.theme.PAGING_INDICATOR_HEIGHT
 import br.com.mdr.animeapp.ui.theme.PAGING_INDICATOR_SPACING
 import br.com.mdr.animeapp.ui.theme.PAGING_INDICATOR_WIDTH
@@ -143,7 +144,7 @@ fun PagerScreen(onBoardingPage: OnBoardingPage) {
         )
 
         Text(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(MEDIUM_PADDING),
             color = MaterialTheme.colorScheme.descriptionColor,
             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
             text = onBoardingPage.description,

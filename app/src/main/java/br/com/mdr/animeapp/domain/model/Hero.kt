@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 data class Hero(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
+    val anime: String,
     val name: String,
     val image: String,
     val about: String,
@@ -20,4 +21,6 @@ data class Hero(
     val family: List<String>,
     val abilities: List<String>,
     val natureTypes: List<String>
-)
+) {
+    fun getAnimeName() = "Anime: $anime"
+}

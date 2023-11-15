@@ -22,6 +22,24 @@ class HeroRemoteMediator @Inject constructor(
     private val heroesDao = database.getHeroDao()
     private val heroesRemoteKeysDao = database.getRemoteKeysDao()
 
+    // Checking whether cached data is out of date
+    // and decide whether to trigger a remote refresh.
+    override suspend fun initialize(): InitializeAction {
+        val currentTime = System.currentTimeMillis()
+        val lastUpdate = heroesRemoteKeysDao.getRemoteKeys(1)?.lastUpdated ?: 0L
+        val cacheTimeOut = 5 // Time in minutes to calculate when RemoteMediator should request new data from server
+
+        val diffInMinutes = (currentTime - lastUpdate) / 1000 / 60
+
+        // If cache time isn't expired yet, skip server refresh
+        return if (diffInMinutes.toInt() <= cacheTimeOut) {
+            InitializeAction.SKIP_INITIAL_REFRESH
+        } else {
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        }
+
+    }
+
     override suspend fun load(loadType: LoadType, state: PagingState<Int, Hero>): MediatorResult {
         return try {
 
@@ -60,7 +78,8 @@ class HeroRemoteMediator @Inject constructor(
                             HeroRemoteKeys(
                                 id = hero.id,
                                 prevPage = prevPage,
-                                nextPage = nextPage
+                                nextPage = nextPage,
+                                lastUpdated = response.lastUpdated
                             )
                         }
 

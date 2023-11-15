@@ -4,10 +4,7 @@ import androidx.paging.PagingData
 import br.com.mdr.animeapp.domain.model.Hero
 import kotlinx.coroutines.flow.Flow
 
-interface HeroesRepository {
-
-    suspend fun saveOnboardingState(completed: Boolean)
-    fun readOnboardingState(): Flow<Boolean>
-
+interface RemoteDataSource {
     fun getAllHeroes(): Flow<PagingData<Hero>>
+    fun searchHeroes(): Flow<PagingData<Hero>>
 }

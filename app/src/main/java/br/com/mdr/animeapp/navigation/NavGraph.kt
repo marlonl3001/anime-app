@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import br.com.mdr.animeapp.presentation.screens.home.HomeScreen
+import br.com.mdr.animeapp.presentation.screens.search.SearchScreen
 import br.com.mdr.animeapp.presentation.screens.splash.SplashScreen
 import br.com.mdr.animeapp.presentation.screens.welcome.WelcomeScreen
 import br.com.mdr.animeapp.util.Constants.HERO_ID_KEY
@@ -34,7 +35,7 @@ fun SetupNavGraph(navController: NavHostController) {
 
         }
         composable(route = Screen.Search.route) {
-
+            SearchScreen(navController = navController)
         }
     }
 }

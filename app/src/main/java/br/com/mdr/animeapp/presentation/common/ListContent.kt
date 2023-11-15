@@ -1,7 +1,6 @@
 package br.com.mdr.animeapp.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +48,7 @@ import br.com.mdr.animeapp.util.Constants
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
+import kotlin.NullPointerException
 
 @Composable
 fun ListContent(
@@ -82,12 +82,22 @@ fun handlePagingResult(heroes: LazyPagingItems<Hero>): Boolean {
         }
 
         return when {
-            loadState.refresh is LoadState.Loading -> {
+            loadState.refresh is LoadState.Loading && this.itemCount > 0 -> {
                 ShimmerEffect()
                 false
             }
             error != null -> {
                 EmptyScreen(error = error)
+                false
+            }
+            loadState.refresh is LoadState.Loading && this.itemCount < 1 -> {
+                EmptyScreen()
+                false
+            }
+            loadState.refresh != LoadState.Loading && this.itemCount < 1 -> {
+                EmptyScreen(LoadState.Error(
+                    NullPointerException()
+                ))
                 false
             }
             else -> true

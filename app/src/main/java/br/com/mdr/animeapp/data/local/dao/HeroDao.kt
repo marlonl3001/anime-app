@@ -10,6 +10,7 @@ import br.com.mdr.animeapp.domain.model.Hero
 @Dao
 interface HeroDao {
     //Using PagingSource, allowing to paginate our db queries
+    //Room supports Paging3 by default, so you don't need to create a custom PagingSource
     @Query("select * from hero_table ORDER BY id ASC")
     fun getHeroes(): PagingSource<Int, Hero>
 

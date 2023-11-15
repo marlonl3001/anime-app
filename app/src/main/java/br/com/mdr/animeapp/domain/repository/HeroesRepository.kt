@@ -10,4 +10,6 @@ interface HeroesRepository {
     fun readOnboardingState(): Flow<Boolean>
 
     fun getAllHeroes(): Flow<PagingData<Hero>>
+
+    fun searchHeroes(query: String): Flow<PagingData<Hero>>
 }

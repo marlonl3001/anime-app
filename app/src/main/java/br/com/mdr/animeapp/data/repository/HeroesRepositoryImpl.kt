@@ -21,4 +21,7 @@ class HeroesRepositoryImpl @Inject constructor(
     }
 
     override fun readOnboardingState(): Flow<Boolean> = dataStore.readOnBoardingState()
+
+    override fun searchHeroes(query: String): Flow<PagingData<Hero>> =
+        dataSource.searchHeroes(query)
 }

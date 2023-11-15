@@ -8,17 +8,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
+import br.com.mdr.animeapp.navigation.Screen
 import br.com.mdr.animeapp.presentation.common.ListContent
 import br.com.mdr.animeapp.ui.theme.MEDIUM_PADDING
 
@@ -40,7 +39,7 @@ fun HomeScreen(
         topBar = {
             HomeTopBar(
                 onSearchClick = {
-
+                    navController.navigate(Screen.Search.route)
                 }
             )
         },

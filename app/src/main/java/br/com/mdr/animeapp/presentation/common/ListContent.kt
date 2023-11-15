@@ -87,17 +87,21 @@ fun handlePagingResult(heroes: LazyPagingItems<Hero>): Boolean {
                 false
             }
             error != null -> {
-                EmptyScreen(error = error)
+                EmptyScreen(heroes = this, error = error)
                 false
             }
-            loadState.refresh is LoadState.Loading && this.itemCount < 1 -> {
+            this.itemCount < 1 -> {
                 EmptyScreen()
                 false
             }
-            loadState.refresh != LoadState.Loading && this.itemCount < 1 -> {
-                EmptyScreen(LoadState.Error(
-                    NullPointerException()
-                ))
+            loadState.refresh != LoadState.Loading && this.itemCount < 1
+                    && error != null-> {
+                EmptyScreen(
+                    error = LoadState.Error(
+                        NullPointerException()
+                    ),
+                    heroes = this
+                )
                 false
             }
             else -> true

@@ -24,3 +24,8 @@ data class Hero(
 ) {
     fun getAnimeName() = "Anime: $anime"
 }
+
+enum class Anime(val animeName: String) {
+    NARUTO("Naruto"),
+    ONE_PIECE("One Piece")
+}

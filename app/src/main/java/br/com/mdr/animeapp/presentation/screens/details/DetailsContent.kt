@@ -1,9 +1,13 @@
 package br.com.mdr.animeapp.presentation.screens.details
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,6 +16,9 @@ import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +28,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +47,10 @@ import br.com.mdr.animeapp.ui.theme.MIN_SHEET_HEIGHT
 import br.com.mdr.animeapp.ui.theme.SMALL_PADDING
 import br.com.mdr.animeapp.ui.theme.titleColor
 import br.com.mdr.animeapp.util.Constants
+import br.com.mdr.animeapp.util.Constants.BASE_URL
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import coil.size.Size
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -53,9 +66,17 @@ fun DetailsContent(
         sheetPeekHeight = MIN_SHEET_HEIGHT,
         sheetContent = {
             selectedHero?.let { BottomSheetContent(selectedHero = it) }
-        }) {
-
-    }
+        },
+        content = {
+            selectedHero?.let {
+                BackgroundContent(heroImage = it.image,
+                    onCloseClicked = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+        }
+    )
 }
 
 @Composable
@@ -157,6 +178,53 @@ fun BottomSheetContent(
                 items = selectedHero.natureTypes,
                 textColor = contentColor
             )
+        }
+    }
+}
+
+@Composable
+fun BackgroundContent(
+    heroImage: String,
+    imageFraction: Float = 1f,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    onCloseClicked: () -> Unit
+) {
+
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest
+            .Builder(LocalContext.current)
+            .data("${BASE_URL}${heroImage}")
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .size(Size.ORIGINAL)
+            .build()
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(backgroundColor)
+    ) {
+        Image(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(fraction = imageFraction)
+                .align(Alignment.TopStart),
+            painter = painter,
+            contentDescription = stringResource(id = R.string.hero_image),
+            contentScale = ContentScale.Crop
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(onClick = { onCloseClicked }) {
+                Icon(
+                    modifier = Modifier.size(INFO_ICON_SIZE),
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(id = R.string.close_icon),
+                    tint = Color.White)
+            }
         }
     }
 }

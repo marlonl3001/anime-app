@@ -1,0 +1,108 @@
+name: Test at PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    branches:
+      - develop
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+
+env:
+  LANG: "en_US.UTF-8"
+  ImageOS: ubuntu18
+
+jobs:
+  test:
+    runs-on: [self-hosted, Linux, akspriv-viaunica-hlg]
+
+    steps:
+
+      - name: Remove label waiting-QA
+        uses: buildsville/add-remove-label@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          label: waiting-QA
+          type: remove
+
+      - name: Remove label conflict
+        uses: buildsville/add-remove-label@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          label: conflict
+          type: remove
+
+      - name: Skip Duplicate Actions
+        uses: fkirc/skip-duplicate-actions@v3.3.0
+        with:
+          skip_after_successful_duplicate: 'false'
+
+      - name: Checkout in Branch
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Config Ruby 2.7 and Bundle Install
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.1'
+          bundler-cache: true
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: 'adopt'
+
+      - name: Set en_US.UTF-8
+        run: |
+          sudo locale-gen en_US.UTF-8
+          sudo update-locale LANG=en_US.UTF-8
+
+      - name: Set Github Credentials
+        uses: fusion-engineering/setup-git-credentials@v2
+        with:
+          credentials: ${{ secrets.SRC_MOBILE_TOKEN }}
+
+      - name: Danger Validation Pre-Build
+        run: |
+          bundle exec danger --fail-on-errors=false --dangerfile=Dangerfile.prebuild
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+
+      - name: Install Android SDK and NDK
+        run: |
+          wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
+          unzip commandlinetools-linux-6858069_latest.zip
+          rm commandlinetools-linux-6858069_latest.zip
+          mkdir vendor/cmdline-tools
+          mv cmdline-tools vendor/cmdline-tools/
+          mv vendor/cmdline-tools/cmdline-tools vendor/cmdline-tools/tools
+          export PATH=$(pwd)/vendor/cmdline-tools/:$(pwd)/vendor/cmdline-tools/tools/bin:$PATH
+          yes | sdkmanager "platforms;android-30"
+          yes | sdkmanager "build-tools;30.0.3"
+          yes | sdkmanager --install "ndk;20.0.5594570"
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Check Sonar Scan
+        run: |
+          export ANDROID_SDK_ROOT="$(pwd)/vendor"
+          bundle exec fastlane code_analysis_reports
+          ./tools/scripts/unit_tests.sh
+          bundle exec fastlane sonarcloud_scan
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Danger Validation Tests
+        run: |
+          bundle exec danger --fail-on-errors=false
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.ACTIONS_TOKEN }}

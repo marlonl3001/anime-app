@@ -4,8 +4,8 @@ on:
   pull_request:
     types: [opened, synchronize, edited, reopened]
     branches:
-      develop
-      main
+      - develop
+      - main
     paths-ignore:
       - '**.md'
       - '.github/**'

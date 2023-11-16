@@ -12,4 +12,5 @@ object Constants {
 
     const val LAST_ONBOARDING_PAGE = 2
     const val DEFAULT_PAGE_SIZE = 5
+    const val ABOUT_TEXT_MAX_LINES = 7
 }

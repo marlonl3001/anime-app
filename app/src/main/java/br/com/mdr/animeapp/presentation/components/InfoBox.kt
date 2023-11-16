@@ -18,12 +18,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.mdr.animeapp.R
 import br.com.mdr.animeapp.ui.theme.INFO_ICON_SIZE
 import br.com.mdr.animeapp.ui.theme.SMALL_PADDING
-import br.com.mdr.animeapp.ui.theme.descriptionColor
 import br.com.mdr.animeapp.ui.theme.titleColor
 
 @Composable
@@ -47,7 +45,7 @@ fun InfoBox(
             Text(
                 text = bigText,
                 color = textColor,
-                fontSize = MaterialTheme.typography.headlineLarge.fontSize,
+                fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 fontWeight = FontWeight.Black
             )
             Text(

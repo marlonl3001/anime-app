@@ -11,6 +11,8 @@ import br.com.mdr.animeapp.presentation.base.BaseViewModel
 import br.com.mdr.animeapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,8 +21,8 @@ class DetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): BaseViewModel() {
 
-    private val _hero: MutableState<Hero?> = mutableStateOf(null)
-    val hero: State<Hero?> = _hero
+    private val _hero: MutableStateFlow<Hero?> = MutableStateFlow(null)
+    val hero: StateFlow<Hero?> = _hero
 
     init {
         launch(dispatcher = Dispatchers.IO) {

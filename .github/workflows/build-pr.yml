@@ -1,0 +1,51 @@
+name: Build At PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, edited, reopened]
+    branches:
+      - develop
+      - main
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+      
+env:
+  LANG: "en_US.UTF-8"
+  ImageOS: ubuntu18
+  
+jobs:
+  build:
+    # The type of runner that the job will run on    
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+    - uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    
+    - name: Install Dependencies
+      run: yarn install
+
+    - name: Run Unit Test
+      run: ./gradlew test
+      
+    ## cache Gradle dependencies and wrapper to reduce build time
+    - name: Cache Gradle Wrapper
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
+    - name: Cache Gradle Dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-caches-
+    - name: Make Gradlew Executable
+      run: chmod +x ./gradlew

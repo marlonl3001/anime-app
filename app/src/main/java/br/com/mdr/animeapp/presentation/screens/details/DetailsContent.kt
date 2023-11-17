@@ -288,6 +288,7 @@ private fun getHeroIcon(selectedHero: Hero): Int =
     when {
         selectedHero.anime.contains(Anime.NARUTO.animeName) -> R.drawable.ic_logo
         selectedHero.anime.contains(Anime.ONE_PIECE.animeName) -> R.drawable.ic_one_piece
+        selectedHero.anime.contains(Anime.BLEACH.animeName) -> R.drawable.ic_bleach
         else -> R.drawable.ic_logo
     }
 

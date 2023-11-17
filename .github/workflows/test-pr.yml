@@ -17,9 +17,6 @@ env:
 jobs:
   test:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: 29
 
     steps:
       - name: checkout

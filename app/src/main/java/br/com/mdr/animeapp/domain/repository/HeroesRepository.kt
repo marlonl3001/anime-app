@@ -12,4 +12,6 @@ interface HeroesRepository {
     fun getAllHeroes(): Flow<PagingData<Hero>>
 
     fun searchHeroes(query: String): Flow<PagingData<Hero>>
+
+    suspend fun getHero(heroId: Int): Hero
 }

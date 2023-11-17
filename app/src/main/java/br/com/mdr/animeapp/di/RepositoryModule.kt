@@ -5,6 +5,7 @@ import br.com.mdr.animeapp.data.repository.DataStoreOperationsImpl
 import br.com.mdr.animeapp.data.repository.HeroesRepositoryImpl
 import br.com.mdr.animeapp.domain.repository.DataStoreOperations
 import br.com.mdr.animeapp.domain.repository.HeroesRepository
+import br.com.mdr.animeapp.domain.repository.LocalDataSource
 import br.com.mdr.animeapp.domain.repository.RemoteDataSource
 import dagger.Module
 import dagger.Provides
@@ -25,6 +26,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun providesHeroesRepository(dataSource: RemoteDataSource,
-                                 dataStore: DataStoreOperations): HeroesRepository =
-        HeroesRepositoryImpl(dataSource, dataStore)
+                                 dataStore: DataStoreOperations,
+                                 localDataSource: LocalDataSource): HeroesRepository =
+        HeroesRepositoryImpl(dataSource, dataStore, localDataSource)
 }

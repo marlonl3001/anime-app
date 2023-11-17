@@ -3,6 +3,8 @@ package br.com.mdr.animeapp.di
 import android.content.Context
 import androidx.room.Room
 import br.com.mdr.animeapp.data.local.HeroDatabase
+import br.com.mdr.animeapp.data.repository.LocalDataSourceImpl
+import br.com.mdr.animeapp.domain.repository.LocalDataSource
 import br.com.mdr.animeapp.util.Constants.HERO_DATABASE
 import dagger.Module
 import dagger.Provides
@@ -24,4 +26,10 @@ object DatabaseModule {
             klass = HeroDatabase::class.java,
             name = HERO_DATABASE
         ).build()
+
+    @Provides
+    @Singleton
+    fun providesLocalDataSource(dataBase: HeroDatabase): LocalDataSource {
+        return LocalDataSourceImpl(database = dataBase)
+    }
 }

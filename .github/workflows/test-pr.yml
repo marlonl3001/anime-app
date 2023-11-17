@@ -31,17 +31,32 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Set en_US.UTF-8
+        run: |
+          sudo locale-gen en_US.UTF-8
+          sudo update-locale LANG=en_US.UTF-8
+
       - name: Grant permission to Gradle wrapper
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug
 
+      - name: Install Android SDK and NDK
+        run: |
+          wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
+          unzip commandlinetools-linux-6858069_latest.zip
+          rm commandlinetools-linux-6858069_latest.zip
+          mkdir vendor/cmdline-tools
+          mv cmdline-tools vendor/cmdline-tools/
+          mv vendor/cmdline-tools/cmdline-tools vendor/cmdline-tools/tools
+          export PATH=$(pwd)/vendor/cmdline-tools/:$(pwd)/vendor/cmdline-tools/tools/bin:$PATH
+          yes | sdkmanager "platforms;android-30"
+          yes | sdkmanager "build-tools;30.0.3"
+          yes | sdkmanager --install "ndk;20.0.5594570"
+
       - name: Run Android tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedAndroidTest
+        run: ./gradlew connectedAndroidTest
 
       - name: Upload test results
         uses: actions/upload-artifact@v2

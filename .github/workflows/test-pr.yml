@@ -32,13 +32,15 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
+          key: avd-30
 
       - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: ReactiveCircus/android-emulator-runner@v2.28.0
         with:
-          api-level: ${{ matrix.api-level }}
+          api-level: 30
+          target: google_apis
+          arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
@@ -47,7 +49,9 @@ jobs:
       - name: Run tests
         uses: ReactiveCircus/android-emulator-runner@v2.28.0
         with:
-          api-level: ${{ matrix.api-level }}
+          api-level: 30
+          target: google_apis
+          arch: x86_64
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true

@@ -27,5 +27,6 @@ data class Hero(
 
 enum class Anime(val animeName: String) {
     NARUTO("Naruto"),
-    ONE_PIECE("One Piece")
+    ONE_PIECE("One Piece"),
+    BLEACH("Bleach")
 }
